@@ -1,5 +1,6 @@
 package batalhanavalrestservidor;
 
+import batalhanavalrestservidor.util.HttpUtil;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
@@ -96,7 +97,7 @@ public class BatalhaNavalRESTServidor extends JApplet {
                 if (validarHeader(mensagemRecebida)) {
                     new Thread(() -> handleMensagem(comunicador, mensagemRecebida)).start();
                 } else {
-                    comunicador.enviarMensagemParaJogador("HTTP/1.1 400");
+                    comunicador.enviarMensagemParaJogador(HttpUtil.gerarHttp(400, null));
                     comunicador.close();
                 }
             }
@@ -119,7 +120,8 @@ public class BatalhaNavalRESTServidor extends JApplet {
     }
     
     private static void handleMensagem(Comunicador comunicador, String mensagem) {
-        comunicador.enviarMensagemParaJogador("HTTP/1.1 200 \r\n Content-Type: text/plain\r\n Connection: close\r\n\n RESPOSTA FON");
+        String resposta = HttpUtil.gerarHttp(200, "RESPOSTA FON");
+        comunicador.enviarMensagemParaJogador(resposta);
         comunicador.close();
     }
     
